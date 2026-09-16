@@ -1,0 +1,4 @@
+interface:
+  display_name: "Geiger Report"
+  short_description: "Understand AI tool access and what to review next"
+  default_prompt: "Use $geiger-report to scan my AI setup and explain what needs my attention."
