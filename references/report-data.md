@@ -1,6 +1,6 @@
 # Filling the standard report
 
-The renderer uses only Node built-ins. Keep the template's layout and CSS unchanged for ordinary reports; put your interpretation in an `analysis.json` outside version control.
+The renderer uses only Node built-ins and embeds the bundled Ultra.dev logo and fonts from `assets/brand/`. Keep these assets with the installed skill. Keep the template's layout and CSS unchanged for ordinary reports; put your interpretation in an `analysis.json` outside version control.
 
 ## Fields
 
@@ -25,11 +25,11 @@ See `examples/analysis.json` for a complete synthetic input.
 ## Render
 
 ```sh
-node "<skill-directory>/scripts/render-report.mjs" "/absolute/path/scan.json" "/absolute/path/analysis.json" "/absolute/fresh-output/geiger-report.html"
+node "<skill-directory>/scripts/render-report.mjs" "/absolute/path/scan.json" "/absolute/path/analysis.json" "/absolute/fresh-output/geiger-gauge.html"
 ```
 
 The renderer writes the HTML and an exact copy of the supplied JSON as sibling `scan.json`. It embeds that same JSON text in an expandable block and provides open/download links to the file. No network requests or separate assets are needed to view the HTML. Keep both files together for the file links to work. It refuses to overwrite a report or a different existing scan.
 
 Geiger output is normally value-redacted. Inspect supplied reports before rendering. If an input unexpectedly contains real secret values, preserve the original privately and render from a separately sanitized copy. Set `rawNote` to explain that the displayed/downloadable JSON is redacted. Do not claim that a sanitized copy is byte-identical to the original.
 
-If Node is unavailable when interpreting supplied JSON, use another available file-writing tool to assemble the same template: replace its single `__GEIGER_REPORT_DATA__` token with serialized `{analysis, rawJson}`. `rawJson` is the exact file text, not an object. Escape `<` as `\u003c`, `&` as `\u0026`, U+2028 and U+2029 in the serialized payload before embedding. Write the same raw text to sibling `scan.json`. Preserve all findings, validate source/action IDs, and never insert scan text as HTML. Do not redesign the template or silently omit the raw-data section.
+If Node is unavailable when interpreting supplied JSON, use another available file-writing tool to assemble the same template: first replace the `__ULTRA_INTER_REGULAR__`, `__ULTRA_INTER_BOLD__`, `__ULTRA_MONO__`, and `__ULTRA_ICON__` tokens with base64 from the corresponding bundled Inter 400, Inter 700, JetBrains Mono 400, and Ultra icon files, and retain the bundled font license notices in an HTML comment. Then replace its single `__GEIGER_REPORT_DATA__` token with serialized `{analysis, rawJson}`. `rawJson` is the exact file text, not an object. Escape `<` as `\u003c`, `&` as `\u0026`, U+2028 and U+2029 in the serialized payload before embedding. Write the same raw text to sibling `scan.json`. Preserve all findings, validate source/action IDs, and never insert scan text as HTML. Do not redesign the template or silently omit the raw-data section.

@@ -4,6 +4,12 @@ import { dirname, resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const templatePath = new URL('../assets/report-template.html', import.meta.url);
+const brandAssets = {
+  __ULTRA_INTER_REGULAR__: 'inter-400.woff2',
+  __ULTRA_INTER_BOLD__: 'inter-700.woff2',
+  __ULTRA_MONO__: 'jetbrains-mono-400.woff2',
+  __ULTRA_ICON__: 'ultra-icon.png',
+};
 const priorities = new Set(['review', 'confirm', 'clear']);
 const statuses = new Set(['Verified source link', 'Possible match', 'No public repo identified', 'Lookup unavailable']);
 const requireValue = (ok, message) => { if (!ok) throw new Error(message); };
@@ -47,7 +53,14 @@ export function buildReport(rawJson, analysis) {
   const payload = JSON.stringify({ analysis, rawJson })
     .replace(/</g, '\\u003c').replace(/&/g, '\\u0026')
     .replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
-  const template = readFileSync(templatePath, 'utf8');
+  let template = readFileSync(templatePath, 'utf8');
+  for (const [token, filename] of Object.entries(brandAssets)) {
+    template = template.replace(token, readFileSync(new URL('../assets/brand/' + filename, import.meta.url)).toString('base64'));
+  }
+  // Retain required font notices inside portable reports as well as in the skill package.
+  const licenses = ['Inter-LICENSE.txt', 'JetBrainsMono-OFL.txt'].map(name =>
+    readFileSync(new URL('../assets/brand/' + name, import.meta.url), 'utf8')).join('\n\n');
+  template = template.replace('</head>', '<!-- Bundled font licenses\n' + licenses.replace(/--/g, '—') + '\n--></head>');
   requireValue(template.split('__GEIGER_REPORT_DATA__').length === 2, 'Template must contain one data placeholder');
   return template.replace('__GEIGER_REPORT_DATA__', () => payload);
 }

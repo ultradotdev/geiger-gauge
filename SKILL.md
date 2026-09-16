@@ -1,9 +1,9 @@
 ---
-name: geiger-report
+name: geiger-gauge
 description: Run Geiger to inventory local AI tools, map findings to their source repositories, and explain access and next steps in plain language. Use when someone wants to understand their AI tools, plugins, MCP servers, or an existing Geiger report.
 ---
 
-# Geiger report
+# Geiger Gauge
 
 Help a less technical person answer: **What is installed, what can it reach, and what should I check next?** Use [Geiger](https://github.com/Atomburstofficial/geiger) for collection and your judgment for interpretation. A finding is an inventory entry, not necessarily a problem.
 
@@ -58,12 +58,12 @@ Preserve reduced confidence and policy-wrapper notes. Do not claim a wrapper enf
 
 ## 4. Deliver a report someone can actually use
 
-The primary deliverable is a self-contained **`geiger-report.html`**, not terminal output, a JSON dump, or a dense Markdown inventory. Save it beside the scan JSON (or in a fresh output directory for supplied data), and open it with the available local preview/browser tool. Do not overwrite an earlier report. A short chat summary accompanies the report; Markdown is a fallback only if the environment cannot produce HTML.
+The primary deliverable is a self-contained **`geiger-gauge.html`**, not terminal output, a JSON dump, or a dense Markdown inventory. Save it beside the scan JSON (or in a fresh output directory for supplied data), and open it with the available local preview/browser tool. Do not overwrite an earlier report. A short chat summary accompanies the report; Markdown is a fallback only if the environment cannot produce HTML.
 
 Use the bundled **`assets/report-template.html`** and **`scripts/render-report.mjs`** for every HTML report. Read [the data contract](references/report-data.md), write `analysis.json` with your interpretations, and render with:
 
 ```sh
-node "<skill-directory>/scripts/render-report.mjs" "/absolute/path/scan.json" "/absolute/path/analysis.json" "/absolute/fresh-output/geiger-report.html"
+node "<skill-directory>/scripts/render-report.mjs" "/absolute/path/scan.json" "/absolute/path/analysis.json" "/absolute/fresh-output/geiger-gauge.html"
 ```
 
 The template owns layout, styling, card ordering, counts, evidence disclosures, and raw-data controls. Do not restyle or recreate it for each scan. The helper uses Node built-ins only. For supplied JSON without Node, the data contract describes how to fill the same template using available file tools.
@@ -77,6 +77,8 @@ Build the content for someone who doesn't know what an MCP server or environment
 5. **Keep a source index and a brief coverage section.** Include verified repository links, verification basis, unresolved identities, and links back to affected tools. Distinguish a source link from verification of installed code. Summarize diagnostics, scope, scan time and limitations. Explain that no findings means nothing was detected in this scope, not proof the computer is safe.
 
 6. **Include the raw scan.** Keep the template's expandable “Show raw JSON output” block and its open/download links to sibling `scan.json`. The renderer embeds the exact JSON text used as input and copies the same text to that file. Keep both files together. If supplied data contains real secret values, use a separately sanitized input and explain that redaction via `rawNote`; never expose values or silently mislabel altered data as the original.
+
+Use the bundled Ultra.dev branding: Ultra Dusk charcoal surfaces, warm text, lavender/blue accents, green primary buttons, the Ultra mark, Inter and JetBrains Mono. The project link is `https://ultra.dev/projects/geiger-gauge` and repository link is `https://github.com/ultradotdev/geiger-gauge`. Keep Geiger by Atomburst credited separately as the scan engine. Assets are embedded, not fetched at report-view time.
 
 Use a calm, readable design: generous spacing, a clear type hierarchy, high contrast, restrained amber for review and blue/neutral for confirmation. Status is expressed in words as well as color. Use responsive single-column cards on phones, semantic headings, keyboard-accessible links/disclosures, and print-friendly styles. Avoid gauges, threat theatrics, giant comparison tables, and repeating the same warning in every section. The template implements this design; `examples/synthetic-report.html` demonstrates it. Never reuse sample findings or counts as real data.
 

@@ -1,4 +1,7 @@
 interface:
-  display_name: "Geiger Report"
+  display_name: "Geiger Gauge"
   short_description: "Understand AI tool access and what to review next"
-  default_prompt: "Use $geiger-report to scan my AI setup and explain what needs my attention."
+  default_prompt: "Use $geiger-gauge to scan my AI setup and explain what needs my attention."
+  icon_small: "./assets/brand/ultra-icon.png"
+  icon_large: "./assets/brand/ultra-icon.png"
+  brand_color: "#c0abf5"
