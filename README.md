@@ -4,7 +4,7 @@ Understand what your AI tools can access, without reading a wall of scanner outp
 
 A small skill for Claude Code and Codex. It checks Node/npx, runs [Geiger](https://github.com/Atomburstofficial/geiger), connects findings to their relevant GitHub repositories, and gives you a plain-language report with prioritized next steps.
 
-The skill lives entirely in [SKILL.md](SKILL.md). No server, account, custom scanner, or runtime dependencies beyond Geiger's Node requirement.
+The workflow lives in [SKILL.md](SKILL.md). The [synthetic example report](examples/synthetic-report.html) demonstrates its visual output. No server, account, custom scanner, or runtime dependencies beyond Geiger's Node requirement.
 
 ## Install
 
@@ -13,7 +13,7 @@ Copy this repository's `SKILL.md` into a folder named `geiger-report` in your as
 - **Claude Code:** `~/.claude/skills/geiger-report/SKILL.md`
 - **Codex:** `~/.agents/skills/geiger-report/SKILL.md`
 
-For project-only use, place that folder under `.claude/skills/` or `.agents/skills/` in the project instead. The optional `agents/openai.yaml` supplies Codex display metadata; copy it into the skill folder's `agents/` directory if desired. Reload your assistant if the skill does not appear immediately. See the official [Claude Code](https://code.claude.com/docs/en/skills) and [Codex](https://developers.openai.com/codex/skills) skill documentation.
+For project-only use, place that folder under `.claude/skills/` or `.agents/skills/` in the project instead. You can also copy `examples/` into the skill folder to give the assistant a visual reference. The optional `agents/openai.yaml` supplies Codex display metadata; copy it into the skill folder's `agents/` directory if desired. Reload your assistant if the skill does not appear immediately. See the official [Claude Code](https://code.claude.com/docs/en/skills) and [Codex](https://developers.openai.com/codex/skills) skill documentation.
 
 Then ask:
 
@@ -26,7 +26,7 @@ Or supply an existing Geiger JSON report. No new scan or Node installation is ne
 - A short explanation of your setup and up to three useful next steps.
 - Every detected entry classified by type, access, source confidence, and review priority.
 - A repository index with verified links and clearly marked unknowns.
-- A local `geiger-report.md`, plus the scan JSON when a new scan runs.
+- A self-contained, mobile-friendly `geiger-report.html` with clear next-step cards, source links, and expandable technical evidence. The scan JSON is a secondary artifact.
 
 The priorities are **Review first**, **Confirm purpose**, and **No extra action identified**. They are not malware verdicts or security certifications. Repository stars do not establish trust.
 
@@ -42,6 +42,6 @@ Geiger reads known configuration locations. It cannot prove what a tool did, whe
 
 This is intentionally a Markdown skill, not a wrapper application. Changes should keep the workflow small and readable. When changing the scan command, check the npm release, upstream JSON schema, diagnostics, and a synthetic fixture before updating the tested version. Never commit real scan reports or credentials.
 
-Validated against Geiger 0.3.0: a synthetic MCP configuration produced schema-v1 findings, the expected access labels, and a credential key name without exposing its dummy value. Frontmatter is checked with the skill-creator validator. This checks command/schema compatibility, not the quality of every model-generated report.
+Validated against Geiger 0.3.0: a synthetic MCP configuration produced schema-v1 findings, the expected access labels, and a credential key name without exposing its dummy value. Frontmatter is checked with the skill-creator validator. The included synthetic HTML report was developed from that scan and checked in desktop/mobile browsers. This checks the example and command/schema compatibility, not the quality of every model-generated report.
 
 MIT licensed. Intended repository: `ultradotdev/geiger-report`.
