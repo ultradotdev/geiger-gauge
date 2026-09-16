@@ -6,3 +6,6 @@ scan.json
 geiger-report.md
 reports/
 geiger-report.html
+
+# Deliberately synthetic fixture for the reproducible example
+!/examples/scan.json

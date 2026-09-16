@@ -24,7 +24,7 @@ If the user supplies a Geiger JSON report, use it without requiring Node or resc
 
 ## 2. Identify what each entry belongs to
 
-Assign stable IDs within this report (`F01`, `F02`, …). Preserve each entry's kind, ecosystem/detector, evidence location, confidence, and relevant notes. Group repeat installs for readability while retaining every source location and difference in access.
+Assign stable IDs within this report (`F01`, `F02`, …). Preserve each entry's kind, ecosystem/detector, evidence location, confidence, and relevant notes. Give each finding its own card, retaining every source location; share repository references for repeat installs.
 
 Build a repository index and reference it from each finding:
 
@@ -60,18 +60,28 @@ Preserve reduced confidence and policy-wrapper notes. Do not claim a wrapper enf
 
 The primary deliverable is a self-contained **`geiger-report.html`**, not terminal output, a JSON dump, or a dense Markdown inventory. Save it beside the scan JSON (or in a fresh output directory for supplied data), and open it with the available local preview/browser tool. Do not overwrite an earlier report. A short chat summary accompanies the report; Markdown is a fallback only if the environment cannot produce HTML.
 
-Build the page for someone who doesn't know what an MCP server or environment variable is:
+Use the bundled **`assets/report-template.html`** and **`scripts/render-report.mjs`** for every HTML report. Read [the data contract](references/report-data.md), write `analysis.json` with your interpretations, and render with:
+
+```sh
+node "<skill-directory>/scripts/render-report.mjs" "/absolute/path/scan.json" "/absolute/path/analysis.json" "/absolute/fresh-output/geiger-report.html"
+```
+
+The template owns layout, styling, card ordering, counts, evidence disclosures, and raw-data controls. Do not restyle or recreate it for each scan. The helper uses Node built-ins only. For supplied JSON without Node, the data contract describes how to fill the same template using available file tools.
+
+Build the content for someone who doesn't know what an MCP server or environment variable is:
 
 1. **Lead with the conclusion.** Write a specific headline such as “One connected tool needs a closer look,” followed by two sentences explaining the main reason and first action. Show compact counts for review priorities and total entries. Never invent a safety score, number of vulnerabilities, or reassuring green “all safe” banner. An incomplete scan must be visible here, not buried below.
 2. **Put next steps first.** Offer up to three numbered actions in priority order. Each says what to do, where to look, and why, linking to its finding card. Avoid vague “audit this” tasks, unexplained commands, and fake one-click fix buttons. Do not claim a setting was changed. For clean/empty results, explain scope without inventing actions.
-3. **Give each tool a readable card.** Order by priority. Show its name, everyday description (“a connected add-on for Claude Code”), priority, and one sentence on what it can reach. Explain *why it matters for this item*, what is known about its source, and one concrete next step. Define jargon on first use. Keep stable finding and source IDs for cross-references. Group repeat installs only when every location and difference remains available.
+3. **Give each tool a readable card.** Order by priority. Show its name, everyday description (“a connected add-on for Claude Code”), priority, and one sentence on what it can reach. Explain *why it matters for this item*, what is known about its source, and one concrete next step. Define jargon on first use. Keep stable finding and source IDs for cross-references. Keep one card per finding; share source IDs for repeat installs.
 4. **Tuck evidence under native disclosure controls.** Use `<details>` for paths, raw exposure labels, credential key names, detector confidence, and scanner notes. Lead with meaning in the card, not ALL-CAPS flags. Users can expand “Where to look & technical evidence” when ready to act. Never include a secret value, even in hidden markup, scripts, comments, or data attributes.
 5. **Keep a source index and a brief coverage section.** Include verified repository links, verification basis, unresolved identities, and links back to affected tools. Distinguish a source link from verification of installed code. Summarize diagnostics, scope, scan time and limitations. Explain that no findings means nothing was detected in this scope, not proof the computer is safe.
 
-Use a calm, readable design: generous spacing, a clear type hierarchy, high contrast, restrained amber for review and blue/neutral for confirmation. Status is expressed in words as well as color. Use responsive single-column cards on phones, semantic headings, keyboard-accessible links/disclosures, and print-friendly styles. Avoid gauges, threat theatrics, giant comparison tables, and repeating the same warning in every section. For a concrete visual reference, see `examples/synthetic-report.html` if it is present; follow its hierarchy, never reuse its findings or counts as real data.
+6. **Include the raw scan.** Keep the template's expandable “Show raw JSON output” block and its open/download links to sibling `scan.json`. The renderer embeds the exact JSON text used as input and copies the same text to that file. Keep both files together. If supplied data contains real secret values, use a separately sanitized input and explain that redaction via `rawNote`; never expose values or silently mislabel altered data as the original.
+
+Use a calm, readable design: generous spacing, a clear type hierarchy, high contrast, restrained amber for review and blue/neutral for confirmation. Status is expressed in words as well as color. Use responsive single-column cards on phones, semantic headings, keyboard-accessible links/disclosures, and print-friendly styles. Avoid gauges, threat theatrics, giant comparison tables, and repeating the same warning in every section. The template implements this design; `examples/synthetic-report.html` demonstrates it. Never reuse sample findings or counts as real data.
 
 Keep HTML/CSS and any necessary JavaScript inline. No remote fonts, analytics, CDNs, automatic network requests, or framework/build step. Treat source strings as text: escape all data inserted into HTML and allow only verified http(s) destinations for external links, never executable URLs or scanned commands. Reports are static reading aids; no buttons that pretend to scan or fix things. For large inventories, a small local search/filter is optional and must not hide findings permanently.
 
 Before delivering, reconcile the visible counts and indexed cards with all input findings, check every action has a corresponding item and evidence location, and inspect the page on desktop and mobile if a browser is available. Confirm disclosures work and no raw credential value appears anywhere in the file. Label an example report as synthetic outside the findings; never present it as the user's scan.
 
-Finish in chat with one plain-language takeaway and a prominent link to the HTML report. Keep the JSON as a secondary technical artifact. Keep real reports local; do not commit or upload them. The assistant processes the report in its normal conversation context, and public source lookups use the network. This skill reports and recommends; it does not remove tools, edit configuration, rotate credentials, or run discovered commands.
+Finish in chat with one plain-language takeaway and a prominent link to the HTML report. Link the JSON as a secondary technical artifact as well as in the report. Keep real reports local; do not commit or upload them. The assistant processes the report in its normal conversation context, and public source lookups use the network. This skill reports and recommends; it does not remove tools, edit configuration, rotate credentials, or run discovered commands.

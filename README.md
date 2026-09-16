@@ -4,11 +4,11 @@ Understand what your AI tools can access, without reading a wall of scanner outp
 
 A small skill for Claude Code and Codex. It checks Node/npx, runs [Geiger](https://github.com/Atomburstofficial/geiger), connects findings to their relevant GitHub repositories, and gives you a plain-language report with prioritized next steps.
 
-The workflow lives in [SKILL.md](SKILL.md). The [synthetic example report](examples/synthetic-report.html) demonstrates its visual output. No server, account, custom scanner, or runtime dependencies beyond Geiger's Node requirement.
+The workflow lives in [SKILL.md](SKILL.md). A shared [HTML template](assets/report-template.html) and small Node renderer keep every report consistent. The [synthetic example](examples/synthetic-report.html) is generated from that same template. No server, account, custom scanner, third-party rendering dependency, or build step.
 
 ## Install
 
-Copy this repository's `SKILL.md` into a folder named `geiger-report` in your assistant's skill directory:
+Copy this repository's `SKILL.md`, `assets/`, `scripts/`, and `references/` into a folder named `geiger-report` in your assistant's skill directory:
 
 - **Claude Code:** `~/.claude/skills/geiger-report/SKILL.md`
 - **Codex:** `~/.agents/skills/geiger-report/SKILL.md`
@@ -26,7 +26,7 @@ Or supply an existing Geiger JSON report. No new scan or Node installation is ne
 - A short explanation of your setup and up to three useful next steps.
 - Every detected entry classified by type, access, source confidence, and review priority.
 - A repository index with verified links and clearly marked unknowns.
-- A self-contained, mobile-friendly `geiger-report.html` with clear next-step cards, source links, and expandable technical evidence. The scan JSON is a secondary artifact.
+- A self-contained, mobile-friendly `geiger-report.html` with clear next-step cards, source links, and expandable technical evidence. An expandable block shows the raw JSON, with links to open or download the same `scan.json` file. Keep the HTML and JSON together.
 
 The priorities are **Review first**, **Confirm purpose**, and **No extra action identified**. They are not malware verdicts or security certifications. Repository stars do not establish trust.
 
@@ -40,8 +40,17 @@ Geiger reads known configuration locations. It cannot prove what a tool did, whe
 
 ## Development
 
-This is intentionally a Markdown skill, not a wrapper application. Changes should keep the workflow small and readable. When changing the scan command, check the npm release, upstream JSON schema, diagnostics, and a synthetic fixture before updating the tested version. Never commit real scan reports or credentials.
+The assistant writes interpretation data; `scripts/render-report.mjs` validates it and fills `assets/report-template.html`. Update the template to change the visual standard. The [data contract](references/report-data.md) documents the fields. Changes should keep the workflow small and readable. When changing the scan command, check the npm release, upstream JSON schema, diagnostics, and a synthetic fixture before updating the tested version. Never commit real scan reports or credentials.
 
 Validated against Geiger 0.3.0: a synthetic MCP configuration produced schema-v1 findings, the expected access labels, and a credential key name without exposing its dummy value. Frontmatter is checked with the skill-creator validator. The included synthetic HTML report was developed from that scan and checked in desktop/mobile browsers. This checks the example and command/schema compatibility, not the quality of every model-generated report.
+
+Render the included fixture into a fresh directory:
+
+```sh
+node scripts/render-report.mjs examples/scan.json examples/analysis.json /tmp/geiger-example/geiger-report.html
+node --test tests/render-report.test.mjs
+```
+
+Real scan artifacts remain ignored; the committed `examples/scan.json` contains only synthetic test findings. The raw-data block is embedded, so the report also works directly from disk without fetching JSON.
 
 MIT licensed. Intended repository: `ultradotdev/geiger-report`.

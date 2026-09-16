@@ -1,0 +1,21 @@
+{
+  "synthetic": true,
+  "headline": "One connected tool needs a closer look.",
+  "summary": "A local add-on for Claude Code has what looks like a saved access key, and its source hasn't been identified. Start by checking what this add-on is for and whether you still use it.",
+  "context": "The scan found two entries. These describe configured access; they don't show that either tool misused it.",
+  "scope": "Test home at /tmp/geiger-report-smoke/home; working directory /tmp. This is not an assessment of the user's real AI setup.",
+  "coverage": "No scan diagnostics were reported. The source of the local add-on and whether either entry is intended still need confirmation.",
+  "actions": [
+    {"title": "Identify fixture-mcp before deciding what to change.", "body": "This is an add-on configured inside Claude Code. Check whether you or your team added it and what job it does. If you don't recognize it, ask whoever manages this setup before using it again.", "findingId": "F02"},
+    {"title": "Check how that add-on stores its key.", "body": "The configuration contains an API_KEY entry. An access key lets software sign in to a service, much like a password. Check the tool's setup instructions for the supported way to store it. You don't need to paste the value here. If it was shared or exposed, revoke it with the provider and replace it.", "findingId": "F02"},
+    {"title": "Confirm Claude Code's access fits your work.", "body": "A coding assistant may need to run commands and work with files. Review its permission settings against the projects you actually want it to use.", "findingId": "F01"}
+  ],
+  "findings": [
+    {"id": "F02", "description": "A connected add-on for Claude Code", "priority": "review", "access": "This add-on can run local code and may have broad file access. Its configuration also contains what looks like an access key.", "why": "That combination is worth reviewing when the source of the add-on hasn't been established. It could be a tool you or your team wrote; the scan cannot decide that.", "sourceId": "R02", "sourceExplanation": "A local script named fixture-only-server.js. No public repository was identified from the available evidence.", "nextStep": "Find the fixture-mcp entry in Claude Code's global configuration and confirm who added it. Then check whether it still needs the configured key and file access."},
+    {"id": "F01", "description": "A coding assistant", "priority": "confirm", "access": "It can run commands, work with files beyond a single project, and connect to network services.", "why": "These are capabilities a coding assistant can need. The scan does not tell us whether the current scope matches how you want to use it.", "sourceId": "R01", "sourceExplanation": "The reported package links to Anthropic's Claude Code repository. This verifies the source link, not the contents or safety of this installation.", "nextStep": "Open Claude Code's permission settings and check them against your intended projects. This entry did not report a saved key."}
+  ],
+  "sources": [
+    {"id": "R01", "name": "anthropics/claude-code", "url": "https://github.com/anthropics/claude-code", "status": "Verified source link", "basis": "The npm package's homepage points to this repository, and its README links back to @anthropic-ai/claude-code. Checked September 16, 2026. The installed files were not compared with upstream."},
+    {"id": "R02", "name": "Local script", "url": null, "status": "No public repo identified", "basis": "The scan provides a local filename, not a repository or package identity. Confirm its owner locally rather than guessing a GitHub match."}
+  ]
+}

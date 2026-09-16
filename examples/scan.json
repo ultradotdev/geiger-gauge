@@ -1,0 +1,77 @@
+{
+  "findings": [
+    {
+      "detector": "claude-code",
+      "kind": "agent",
+      "name": "Claude Code",
+      "origin": {
+        "type": "registry",
+        "ref": "@anthropic-ai/claude-code"
+      },
+      "exposures": [
+        "EXECUTES",
+        "BROAD-FILESYSTEM",
+        "NETWORK"
+      ],
+      "evidence": [
+        {
+          "file": "/tmp/geiger-report-smoke/home/.claude",
+          "note": "agent home directory"
+        }
+      ],
+      "secrets": [],
+      "confidence": "high",
+      "notes": [
+        "a coding agent that runs shell commands as this user"
+      ]
+    },
+    {
+      "detector": "claude-code",
+      "kind": "mcp-server",
+      "name": "fixture-mcp (Claude Code · global)",
+      "origin": {
+        "type": "local",
+        "ref": "./fixture-only-server.js"
+      },
+      "exposures": [
+        "EXECUTES",
+        "HOLDS-SECRETS",
+        "BROAD-FILESYSTEM",
+        "UNKNOWN-ORIGIN"
+      ],
+      "evidence": [
+        {
+          "file": "/tmp/geiger-report-smoke/home/.claude.json",
+          "note": "MCP server entry"
+        }
+      ],
+      "secrets": [
+        {
+          "key": "API_KEY",
+          "shape": "opaque value under a credential-named key",
+          "file": "/tmp/geiger-report-smoke/home/.claude.json"
+        }
+      ],
+      "confidence": "high",
+      "notes": [
+        "runs a local script — nothing ties it to a published, reviewable package"
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "meta": {
+    "schemaVersion": 1,
+    "generatedAt": "2026-09-16T00:12:23.019Z",
+    "platform": "darwin",
+    "node": "v26.5.0",
+    "counts": {
+      "EXECUTES": 2,
+      "BROAD-FILESYSTEM": 2,
+      "NETWORK": 1,
+      "HOLDS-SECRETS": 1,
+      "UNKNOWN-ORIGIN": 1
+    },
+    "secretCount": 1,
+    "total": 2
+  }
+}
