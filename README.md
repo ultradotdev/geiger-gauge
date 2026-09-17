@@ -9,7 +9,7 @@ An [Ultra.dev](https://ultra.dev) skill for Claude Code and Codex that explains 
 - Checks Node/npx and runs [Geiger](https://github.com/Atomburstofficial/geiger).
 - Explains each finding in plain language and prioritizes useful next steps.
 - Matches tools to their source repositories, marking uncertain matches honestly.
-- Produces an Ultra-branded HTML report with expandable evidence, raw JSON, and a JSON download.
+- Produces an HTML report with expandable evidence, raw JSON, and a JSON download.
 
 Reports use a shared template, work offline, and stay local. The skill recommends changes; it does not automatically change your setup. Findings describe configured capabilities, not proof of compromise or a security certification.
 
